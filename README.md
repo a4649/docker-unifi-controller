@@ -29,7 +29,7 @@ docker build -t "unifi-controller:latest" --rm .
 ```
 
 
-## Running the Container
+## Running the Container with network host mode
 
 Create a volume to store the UniFi persistence data, then launch the 
 container using the previously created volumes.
@@ -55,7 +55,30 @@ docker run -d \
            --name lumel-unifi \
            lumel/unifi-controller
 ```
+## Running the Container with specific ports
 
+| Port | Function |
+| ---- | -------- |
+| 8443 | Unifi web admin port |
+| 3478/udp | Unifi STUN port |
+| 10001/udp | Required for AP discovery |
+| 8080 | Required for device communication |
+| 1900/udp | Required for Make controller discoverable on L2 network option |
+| 8843 | Unifi guest portal HTTPS redirect port |
+| 8880 | Unifi guest portal HTTP redirect port |
+| 6789 | For mobile throughput test |
+| 5514/udp | Remote syslog port |
+
+```sh
+DATA_PATH=/wherever/unifi-controller
+mkdir -p $DATA_PATH
+docker run -d --name unifi \ 
+           -p 8443:8443 \
+           -p 3478:3478/udp \
+           -p 8080:8080 \
+           -v ${DATA_PATH}:/usr/lib/unifi/data \
+           lumel/unifi-controller
+```
 
 ## Manual Update
 
