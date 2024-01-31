@@ -94,6 +94,41 @@ Note this will also update the UniFi controller, so if you're pinning that for s
 docker exec -it unifi sh -c 'apt-mark hold unifi && apt update && apt dist-upgrade'
 ```
 
+## Device adoption
+
+SSH into device (for switches the default IP Address is 192.168.1.20), default password is ```ubnt```
+
+```sh
+ssh ubnt@192.168.1.20
+```
+
+Add default gateway:
+
+```sh
+route add default gw 192.168.1.1 eth0
+```
+
+Send adoption request:
+
+```sh
+set-inform http://ip-of-controller:8080/inform
+```
+
+Accept the adoption request in the controller Web UI. The device will restart and loose the default gateway. You need to add it again, but, after first provisioning step, the default ssh password won't work anymore. You need to use your unifi account username. Check it on the controller Web UI at **Setting > Site > Device Authentication > Username and password** and use it:
+
+```sh
+ssh your-username@192.168.1.20
+```
+
+Add default gateway:
+
+```sh
+route add default gw 192.168.1.1 eth0
+```
+
+The device should continue the provisioning process.
+
+
 ## Troubleshooting
 
 **Q: Adoption fails, reporting that my devices can't connect to the controller.**
